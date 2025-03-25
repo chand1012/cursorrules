@@ -9,7 +9,7 @@ Requires [gum](https://github.com/charmbracelet/gum) and [jq](https://stedolan.g
 Simply run the following command in your project root.
   
 ```bash
-curl -sL https://smolurl.cc/xrMdThwr_g | bash 
+curl -sL https://smolurl.cc/xrMdThwr_g -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && rm /tmp/install.sh
 ```
 
 ## Rules
