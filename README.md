@@ -1,6 +1,6 @@
-# LLM Rules
+# Cursor Rules
 
-This is my collection of rules for LLM Agentic Coding. Its a mix of my own rules and some copied from [Awesome Cursor Rules](https://github.com/PatrickJS/awesome-cursorrules/tree/main).
+This is my collection of rules for Cursor Agentic Coding. Its a mix of my own rules and some copied from [Awesome Cursor Rules](https://github.com/PatrickJS/awesome-cursorrules/tree/main). If you don't know what the rules are, learn more [here](https://docs.cursor.com/context/rules-for-ai).
 
 ## How I Wrote New Rules
 
@@ -56,9 +56,9 @@ This is a template monorepo for managing database migrations and edge functions 
 
 ## Converting to OpenHands
 
-OpenHands is another LLM Agentic Coding tool similar to Cursor, however it has the ability to be added to an existing GitHub Repo as a GitHub Action, meaning it can create PRs from Issues without ever having to clone the repo locally. This can especially be useful for repos that are either short on development staff, or fixing bugs in a repo that devs either don't have time for or don't want to deal with.
+[OpenHands](https://docs.all-hands.dev/) is another LLM Agentic Coding tool similar to Cursor, however it has the ability to be added to an existing [GitHub Repo as a GitHub Action](https://docs.all-hands.dev/modules/usage/how-to/github-action), meaning it can create PRs from Issues without ever having to clone the repo locally. This can especially be useful for repos that are either short on development staff, or fixing bugs in a repo that devs either don't have time for or don't want to deal with.
 
-OpenHands uses "microagents", which are effectively rules files. There is a `repo.md` file, which is basically the rules for the entire repo, from code style to any information about the project. These are stored in `.openhands/microagents`. We have a helper script for copying the Cursor rules files into the OpenHands microagents directory, and converting it to a `repo.md` file. To use it, simply copy all the rules you want to your Cursor rules directory, make sure you've edited `repo.mdc` to contain accurate information, and run the script.
+OpenHands uses "[microagents](https://docs.all-hands.dev/modules/usage/prompting/microagents-repo)", which are effectively rules files. There is a `repo.md` file, which is basically the rules for the entire repo, from code style to any information about the project. These are stored in `.openhands/microagents`. We have a helper script for copying the Cursor rules files into the OpenHands microagents directory, and converting it to a `repo.md` file. To use it, simply copy all the rules you want to your Cursor rules directory, make sure you've edited `repo.mdc` to contain accurate information, and run the script.
 
 ```bash
 ./rules-to-openhands.sh
