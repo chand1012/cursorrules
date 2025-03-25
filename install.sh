@@ -8,25 +8,25 @@ NC='\033[0m' # No Color
 # Function to check if a command exists
 check_command() {
     if ! command -v "$1" &> /dev/null; then
-        echo -e "${RED}Error: $1 is not installed${NC}"
+        echo -e "\033[0;31mError: $1 is not installed\033[0m"
         if [ "$1" = "gum" ]; then
             if command -v brew &> /dev/null; then
-                echo "Installing gum using Homebrew..."
+                echo -e "\033[0;33mInstalling gum using Homebrew...\033[0m"
                 brew install gum
             else
-                echo "Please install gum first: https://smolurl.cc/tPJ0JQ"
+                echo -e "\033[0;31mPlease install gum first: https://smolurl.cc/tPJ0JQ\033[0m"
                 exit 1
             fi
         elif [ "$1" = "jq" ]; then
             if command -v brew &> /dev/null; then
-                echo "Installing jq using Homebrew..."
+                echo -e "\033[0;33mInstalling jq using Homebrew...\033[0m"
                 brew install jq
             else
-                echo "Please install jq first: https://stedolan.github.io/jq/"
+                echo -e "\033[0;31mPlease install jq first: https://stedolan.github.io/jq/\033[0m"
                 exit 1
             fi
         else
-            echo "Please install $1 first"
+            echo -e "\033[0;31mPlease install $1 first\033[0m"
             exit 1
         fi
     fi
@@ -46,58 +46,112 @@ fetch_options() {
     curl -s "$GITHUB_API/$path" | jq -r '.[].name'
 }
 
-# Fetch available options
-echo "Fetching available options..."
+gum style --foreground 147 "Fetching available options..."
 FRAMEWORKS=($(fetch_options "frameworks"))
 LANGUAGES=($(fetch_options "languages"))
 PRACTICES=($(fetch_options "practice"))
 
 # Create selection menus
-echo "Welcome to LLM Rules Installer!"
-echo "Please select the options you want to install:"
+gum style \
+    --border double \
+    --border-foreground 219 \
+    --padding 1 \
+    --margin 1 \
+    --bold \
+    --foreground 219 \
+    "╭──────────────────────────────────────╮" \
+    "│         LLM Rules Installer          │" \
+    "╰──────────────────────────────────────╯"
 
+gum style --foreground 147 "Please select the options you want to install:"
 
 # Language selection
-echo -e "\n${GREEN}Select Languages:${NC}"
+gum style --bold --foreground 183 "Select Languages:"
 LANGUAGE_CHOICES=$(gum choose --no-limit "${LANGUAGES[@]}")
 
 # Framework selection
-echo -e "\n${GREEN}Select Frameworks:${NC}"
+gum style --bold --foreground 183 "Select Frameworks:"
 FRAMEWORK_CHOICES=$(gum choose --no-limit "${FRAMEWORKS[@]}")
 
 # Practice selection
-echo -e "\n${GREEN}Select Practices:${NC}"
+gum style --bold --foreground 183 "Select Practices:"
 PRACTICE_CHOICES=$(gum choose --no-limit "${PRACTICES[@]}")
 
 # Confirm installation
-echo -e "\n${GREEN}Selected Options:${NC}"
-echo "Frameworks: $FRAMEWORK_CHOICES"
-echo "Languages: $LANGUAGE_CHOICES"
-echo "Practices: $PRACTICE_CHOICES"
+gum style --bold --foreground 219 "Selected Options:"
+echo -n "Frameworks: " && gum style --foreground 178 "${FRAMEWORK_CHOICES[*]}"
+echo -n "Languages: " && gum style --foreground 178 "${LANGUAGE_CHOICES[*]}"
+echo -n "Practices: " && gum style --foreground 178 "${PRACTICE_CHOICES[*]}"
 
 if gum confirm "Proceed with installation?"; then
     # Create necessary directories
-    mkdir -p ./.cursor/rules/
+    mkdir -p .cursor/rules/
 
     # Download selected items
     for framework in $FRAMEWORK_CHOICES; do
-        echo "Downloading framework: $framework"
-        curl -s "https://raw.githubusercontent.com/chandlerh/llmrules/main/frameworks/$framework" > ./.cursor/rules/$framework
+        gum style --foreground 183 "Downloading framework: $framework"
+        curl -s "https://raw.githubusercontent.com/chand1012/llmrules/main/frameworks/$framework" > .cursor/rules/$framework
     done
 
     for language in $LANGUAGE_CHOICES; do
-        echo "Downloading language: $language"
-        curl -s "https://raw.githubusercontent.com/chandlerh/llmrules/main/languages/$language" > ./.cursor/rules/$language
+        gum style --foreground 183 "Downloading language: $language"
+        curl -s "https://raw.githubusercontent.com/chand1012/llmrules/main/languages/$language" > .cursor/rules/$language
     done
 
     for practice in $PRACTICE_CHOICES; do
-        echo "Downloading practice: $practice"
-        curl -s "https://raw.githubusercontent.com/chandlerh/llmrules/main/practice/$practice" > ./.cursor/rules/$practice
+        gum style --foreground 183 "Downloading practice: $practice"
+        curl -s "https://raw.githubusercontent.com/chand1012/llmrules/main/practice/$practice" > .cursor/rules/$practice
     done
 
-    echo -e "${GREEN}Installation complete!${NC}"
-    echo "Files have been installed to ./.cursor/rules/"
+    gum style --bold --foreground 183 "Installation complete!"
+    gum style --foreground 147 "Files have been installed to ./.cursor/rules/"
+
+    # Ask if user wants to convert to OpenHands format
+    if gum confirm "Would you like to convert these rules to OpenHands format?"; then
+        gum style --foreground 147 "Converting rules to OpenHands format..."
+        
+        # Create .openhands/microagents directory if it doesn't exist
+        mkdir -p .openhands/microagents
+
+        # Create repo.md with the header
+        cat > .openhands/microagents/repo.md << 'EOF'
+---
+name: repo
+type: repo
+agent: CodeActAgent
+---
+
+EOF
+
+        # Process each .mdc file in .cursor/rules
+        for file in .cursor/rules/*.mdc; do
+            if [ -f "$file" ]; then
+                gum style --foreground 178 "Converting: $(basename "$file")"
+                # Remove YAML frontmatter (content between first two '---' lines) and append to repo.md
+                awk '
+                    BEGIN {in_frontmatter=0; first_marker=0}
+                    /^---$/ {
+                        if (first_marker == 0) {
+                            first_marker=1;
+                            in_frontmatter=1;
+                            next;
+                        } else if (in_frontmatter) {
+                            in_frontmatter=0;
+                            next;
+                        }
+                    }
+                    !in_frontmatter {print}
+                ' "$file" >> .openhands/microagents/repo.md
+                
+                # Add a newline between files
+                echo "" >> .openhands/microagents/repo.md
+            fi
+        done
+
+        gum style --bold --foreground 183 "OpenHands conversion complete!"
+        gum style --foreground 147 "Converted rules are available in .openhands/microagents/repo.md"
+    fi
 else
-    echo "Installation cancelled."
+    gum style --foreground 204 "Installation cancelled."
     exit 1
 fi 
