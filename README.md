@@ -1,6 +1,6 @@
 # LLM Rules
 
-This is my collection of rules for LLM Agentic Coding. Its a mix of my own and some from [Awesome Cursor Rules](https://github.com/PatrickJS/awesome-cursorrules/tree/main).
+This is my collection of rules for LLM Agentic Coding. Its a mix of my own rules and some copied from [Awesome Cursor Rules](https://github.com/PatrickJS/awesome-cursorrules/tree/main).
 
 ## How I Wrote New Rules
 
