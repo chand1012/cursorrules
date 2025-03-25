@@ -3,7 +3,6 @@
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Function to check if a command exists
@@ -16,6 +15,14 @@ check_command() {
                 brew install gum
             else
                 echo "Please install gum first: https://smolurl.cc/tPJ0JQ"
+                exit 1
+            fi
+        elif [ "$1" = "jq" ]; then
+            if command -v brew &> /dev/null; then
+                echo "Installing jq using Homebrew..."
+                brew install jq
+            else
+                echo "Please install jq first: https://stedolan.github.io/jq/"
                 exit 1
             fi
         else
@@ -31,71 +38,42 @@ check_command "curl"
 check_command "jq"
 
 # GitHub API base URL
-GITHUB_API="https://api.github.com/repos/chandlerh/llmrules/contents"
+GITHUB_API="https://api.github.com/repos/chand1012/llmrules/contents"
 
 # Function to fetch and format options from GitHub
 fetch_options() {
     local path=$1
-    local response=$(curl -s "$GITHUB_API/$path")
-    
-    # Check if the response is valid JSON
-    if ! echo "$response" | jq . >/dev/null 2>&1; then
-        echo -e "${RED}Error: Failed to fetch $path from GitHub API${NC}"
-        echo -e "${YELLOW}Response: $response${NC}"
-        return 1
-    fi
-    
-    # Extract names and filter out README.md
-    echo "$response" | jq -r '.[].name' | grep -v "README.md"
+    curl -s "$GITHUB_API/$path" | jq -r '.[].name'
 }
 
 # Fetch available options
 echo "Fetching available options..."
-
-# Fetch and store options in arrays
-mapfile -t FRAMEWORKS < <(fetch_options "frameworks")
-mapfile -t LANGUAGES < <(fetch_options "languages")
-mapfile -t PRACTICES < <(fetch_options "practice")
-
-# Check if we got any options
-if [ ${#FRAMEWORKS[@]} -eq 0 ] && [ ${#LANGUAGES[@]} -eq 0 ] && [ ${#PRACTICES[@]} -eq 0 ]; then
-    echo -e "${RED}Error: No options found. Please check your internet connection and try again.${NC}"
-    exit 1
-fi
+FRAMEWORKS=($(fetch_options "frameworks"))
+LANGUAGES=($(fetch_options "languages"))
+PRACTICES=($(fetch_options "practice"))
 
 # Create selection menus
-echo -e "${GREEN}Welcome to LLM Rules Installer!${NC}"
+echo "Welcome to LLM Rules Installer!"
 echo "Please select the options you want to install:"
 
-# Framework selection
-if [ ${#FRAMEWORKS[@]} -gt 0 ]; then
-    echo -e "\n${GREEN}Select Frameworks:${NC}"
-    FRAMEWORK_CHOICES=$(gum choose --no-limit "${FRAMEWORKS[@]}")
-fi
 
 # Language selection
-if [ ${#LANGUAGES[@]} -gt 0 ]; then
-    echo -e "\n${GREEN}Select Languages:${NC}"
-    LANGUAGE_CHOICES=$(gum choose --no-limit "${LANGUAGES[@]}")
-fi
+echo -e "\n${GREEN}Select Languages:${NC}"
+LANGUAGE_CHOICES=$(gum choose --no-limit "${LANGUAGES[@]}")
+
+# Framework selection
+echo -e "\n${GREEN}Select Frameworks:${NC}"
+FRAMEWORK_CHOICES=$(gum choose --no-limit "${FRAMEWORKS[@]}")
 
 # Practice selection
-if [ ${#PRACTICES[@]} -gt 0 ]; then
-    echo -e "\n${GREEN}Select Practices:${NC}"
-    PRACTICE_CHOICES=$(gum choose --no-limit "${PRACTICES[@]}")
-fi
-
-# Check if any choices were made
-if [ -z "$FRAMEWORK_CHOICES" ] && [ -z "$LANGUAGE_CHOICES" ] && [ -z "$PRACTICE_CHOICES" ]; then
-    echo -e "${YELLOW}No options were selected. Exiting...${NC}"
-    exit 0
-fi
+echo -e "\n${GREEN}Select Practices:${NC}"
+PRACTICE_CHOICES=$(gum choose --no-limit "${PRACTICES[@]}")
 
 # Confirm installation
 echo -e "\n${GREEN}Selected Options:${NC}"
-[ ! -z "$FRAMEWORK_CHOICES" ] && echo "Frameworks: $FRAMEWORK_CHOICES"
-[ ! -z "$LANGUAGE_CHOICES" ] && echo "Languages: $LANGUAGE_CHOICES"
-[ ! -z "$PRACTICE_CHOICES" ] && echo "Practices: $PRACTICE_CHOICES"
+echo "Frameworks: $FRAMEWORK_CHOICES"
+echo "Languages: $LANGUAGE_CHOICES"
+echo "Practices: $PRACTICE_CHOICES"
 
 if gum confirm "Proceed with installation?"; then
     # Create necessary directories
