@@ -7,7 +7,7 @@ This is my collection of rules for Cursor Agentic Coding. Its a mix of my own ru
 Requires [gum](https://github.com/charmbracelet/gum) and [jq](https://stedolan.github.io/jq/). Will auto install these if you have Homebrew installed.
 
 Simply run the following command in your project root.
-
+  
 ```bash
 curl -sL https://smolurl.cc/08t2JlArmw | bash 
 ```
@@ -91,3 +91,9 @@ This is a template monorepo for managing database migrations and edge functions 
 - Prefer `CREATE TABLE IF NOT EXISTS` over `CREATE TABLE`.
 - Use SQL syntax compatible with your database system (this template assumes PostgreSQL).
 ```
+
+## Converting to OpenHands
+
+[OpenHands](https://docs.all-hands.dev/) is another LLM Agentic Coding tool similar to Cursor, however it has the ability to be added to an existing [GitHub Repo as a GitHub Action](https://docs.all-hands.dev/modules/usage/how-to/github-action), meaning it can create PRs from Issues without ever having to clone the repo locally. This can especially be useful for repos that are either short on development staff, or fixing bugs in a repo that devs either don't have time for or don't want to deal with.
+
+OpenHands uses "[microagents](https://docs.all-hands.dev/modules/usage/prompting/microagents-repo)", which are effectively rules files. There is a `repo.md` file, which is basically the rules for the entire repo, from code style to any information about the project. These are stored in `.openhands/microagents`. The installer script will prompt you and ask if you want to copy the Cursor rules files into the OpenHands microagents directory, and convert it to a `repo.md` file.
