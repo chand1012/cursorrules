@@ -1,0 +1,76 @@
+---
+description: JavaScript best practices for modern web development
+globs: **/*.js, **/*.jsx
+---
+
+# JavaScript Best Practices
+
+## Modern JavaScript Features
+- Use ES modules with `import` and `export` statements  
+- Utilize modern features like optional chaining (`?.`) and nullish coalescing (`??`)  
+- Use `const` and `let` over `var` for better scoping  
+- Implement async/await for asynchronous operations  
+- Use arrow functions for concise syntax and lexical `this`  
+- Leverage template literals for string interpolation  
+- Use destructuring for cleaner object/array handling  
+
+## Naming Conventions
+- Use camelCase for variables and functions  
+- Use PascalCase for classes  
+- Use UPPER_CASE for constants  
+- Use descriptive names with auxiliary verbs (e.g., `isLoading`, `hasError`)  
+- Use consistent naming across the codebase  
+
+## Code Organization
+- Keep files focused and single-purpose  
+- Use a consistent directory structure  
+- Group related functionality together  
+- Use barrel exports (index.js) for clean imports  
+- Use absolute imports over relative when appropriate  
+
+## Functions and Methods
+- Keep functions small and focused  
+- Handle errors appropriately  
+- Document complex functions  
+- Use parameter destructuring for cleaner APIs  
+- Implement proper error boundaries  
+
+## Best Practices
+- Write tests for critical functionality  
+- Use ESLint and Prettier for code consistency  
+- Implement proper error handling  
+- Use proper logging and debugging  
+- Follow security best practices  
+- Keep dependencies up to date  
+
+## Performance
+- Implement proper code splitting  
+- Use lazy loading where appropriate  
+- Optimize bundle size  
+- Use proper caching strategies  
+- Implement proper memoization  
+- Monitor and optimize render performance  
+
+## Testing
+- Write unit tests for business logic  
+- Implement integration tests for complex flows  
+- Use proper testing libraries (Jest, Testing Library)  
+- Write meaningful test descriptions  
+- Test error cases and edge conditions  
+- Maintain good test coverage  
+
+## Documentation
+- Write clear documentation  
+- Use JSDoc for function documentation  
+- Document complex algorithms  
+- Keep README files up to date  
+- Document configuration options  
+- Use meaningful commit messages  
+
+## Frameworks
+- Choose appropriate frameworks for your needs  
+- Follow framework-specific best practices  
+- Keep up with framework updates  
+- Use proper state management  
+- Implement proper routing  
+- Follow component best practices  

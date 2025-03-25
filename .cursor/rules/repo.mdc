@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Repository: MyProject
+Description: A web application for task management
+
+Directory Structure:
+- src/: Main application code
+- tests/: Test files
+- docs/: Documentation
+
+Setup:
+- Run `npm install` to install dependencies
+- Use `npm run dev` for development
+- Run `npm test` for testing
+
+Guidelines:
+- Follow ESLint configuration
+- Write tests for all new features
+- Use TypeScript for new code
+
+If adding a new component in src/components, always add appropriate unit tests in tests/components/.

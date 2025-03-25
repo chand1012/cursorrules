@@ -1,0 +1,71 @@
+---
+description: Go coding standards and best practices for modern development
+globs: **/*.go
+---
+
+# Go Best Practices
+
+## Package and Import Statements
+- Use meaningful package names that reflect their purpose (e.g., `auth`, `config`).
+- Group imports in this order: standard library, third-party, then local packages, separated by blank lines.
+- Avoid import cycles to maintain clean dependency graphs.
+
+## Type System
+- Use `struct` types to define complex data structures.
+- Define `interface` types to specify behavior and enable polymorphism.
+- Use type aliases sparingly for clarity (e.g., `type ID string`).
+- Leverage Go’s built-in types (e.g., `map`, `slice`) and composite types effectively.
+- Avoid unnecessary type conversions to maintain type safety.
+- Use struct embedding for composition instead of inheritance.
+
+## Naming Conventions
+- Use `camelCase` for variable and function names (e.g., `getUser`).
+- Use `PascalCase` for type names and exported identifiers (e.g., `UserService`).
+- Use `ALL_CAPS` for constants (e.g., `MAX_RETRIES`).
+- Be descriptive yet concise in naming (e.g., `userCount` over `cnt`).
+
+## Code Organization
+- Follow the standard Go project layout (e.g., `cmd/`, `pkg/`, `internal/`).
+- Keep related code within the same package for cohesion.
+- Use subdirectories for larger packages to organize functionality (e.g., `api/handlers`).
+
+## Functions and Methods
+- Keep functions short and focused on a single responsibility.
+- Use named return values for clarity in complex functions (e.g., `func getData() (data string, err error)`).
+- Avoid side effects in functions to improve predictability.
+
+## Best Practices
+- Follow the Go proverb: "A little copying is better than a little dependency."
+- Use interfaces to define behavior and decouple components.
+- Prefer composition over inheritance using embedding.
+- Avoid unnecessary abstractions; prioritize simplicity.
+- Use the `init` function sparingly for package initialization.
+- Avoid global variables; if unavoidable, ensure they are thread-safe (e.g., with `sync.Mutex`).
+- Be mindful of memory allocations; use profiling tools (e.g., `pprof`) to optimize performance.
+- Use `gofmt` for consistent formatting and `go vet` for static analysis.
+
+## Error Handling
+- Always check errors explicitly (e.g., `if err != nil`).
+- Use descriptive error messages for debugging (e.g., `errors.New("failed to open file")`).
+- Consider error wrapping with `fmt.Errorf` and `%w` for context (e.g., `fmt.Errorf("query failed: %w", err)`).
+- Use `defer` with `recover` to handle panics in critical sections (e.g., HTTP handlers).
+
+## Concurrency
+- Use goroutines for concurrent tasks (e.g., `go processData()`).
+- Use channels for safe communication between goroutines (e.g., `ch := make(chan int)`).
+- Avoid shared state when possible; prefer message passing via channels.
+
+## Testing
+- Write tests for all public functions using the `testing` package.
+- Use table-driven tests for multiple test cases (e.g., `tests := []struct{...}`).
+- Aim for high test coverage with `go test -cover`.
+
+## Documentation
+- Write doc comments for all exported identifiers (e.g., `// UserService handles user operations`).
+- Follow the standard Go doc format, starting with the identifier name (e.g., `// Package auth provides...`).
+- Include examples in doc comments when possible (e.g., `// Example: ...`).
+
+## Patterns
+- Use interfaces for dependency injection to improve testability.
+- Implement the Repository pattern for data access (e.g., `UserRepository` interface).
+- Use the Factory pattern for object creation (e.g., `NewUserService()`).
