@@ -1,0 +1,42 @@
+---
+description: Best practices for modern web development using ECMAScript 2020+, CSS, HTML5, and esm.sh
+globs: **/*.js, **/*.css, **/*.html
+---
+
+# Modern Web Development Best Practices
+
+## JavaScript (ECMAScript 2020+)
+- Utilize modern JavaScript features such as optional chaining (`?.`), nullish coalescing (`??`), private class fields (`#field`), and top-level await.
+- Use ES modules with `import` and `export` statements for better code organization and tree shaking.
+- Prefer `const` and `let` over `var` for variable declarations to avoid scope-related issues.
+- Use arrow functions for concise syntax, especially in callbacks and methods.
+- Implement asynchronous programming with `async/await` for improved readability and error handling.
+- Handle errors using try-catch blocks and consider creating custom error classes for specific error types.
+
+## CSS
+- Leverage modern CSS features like container queries, the `:has()` selector, and CSS nesting for flexible and maintainable styles.
+- Follow a consistent naming convention, such as BEM (Block Element Modifier), to avoid class name conflicts.
+- Use CSS variables (e.g., `--primary-color`) for colors, fonts, and other reusable values to ensure consistency.
+- Design responsively using media queries, flexbox, and grid to adapt to various screen sizes.
+- Optimize CSS for performance by minimizing file size, avoiding complex selectors, and using efficient properties.
+
+## HTML5
+- Write semantic HTML using tags like `<header>`, `<nav>`, `<main>`, `<article>`, `<section>`, `<aside>`, and `<footer>` to improve accessibility and SEO.
+- Ensure accessibility by providing alternative text for images (e.g., `alt="description"`), using ARIA attributes where necessary, and following WCAG guidelines.
+- Optimize performance by using lazy loading for images (e.g., `loading="lazy"`), minimizing DOM size, and avoiding unnecessary elements.
+
+## Module Imports with esm.sh
+- Import libraries directly in the browser using esm.sh, e.g., `import React from 'https://esm.sh/react'`.
+- Specify the ECMAScript target for modern syntax, e.g., `import React from 'https://esm.sh/react?target=es2024'`, to ensure compatibility with modern browsers.
+- Manage dependencies carefully by tracking versions and avoiding unnecessary imports to keep the bundle size small.
+
+## General Best Practices
+- Organize code into small, focused modules or components to improve maintainability and reusability.
+- Use meaningful and consistent naming conventions, such as camelCase for variables and functions, and UPPER_CASE for constants.
+- Document complex logic with comments and maintain a README file for project overview and setup instructions.
+- Write unit tests using frameworks like Jest to ensure code quality and reliability.
+
+## Patterns and Architecture
+- Apply design patterns such as Module, Factory, and Observer to solve common problems and improve code structure.
+- Consider a component-based architecture for building scalable and maintainable web applications.
+- Use state management solutions like Redux or Context API for complex applications with shared state.

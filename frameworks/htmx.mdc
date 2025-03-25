@@ -1,0 +1,170 @@
+---
+description: 
+globs: **/*.html
+alwaysApply: false
+---
+# HTMX Development Best Practices
+
+## HTML Structure and HTMX Attributes
+HTMX enhances HTML by adding attributes that trigger dynamic behaviors, such as AJAX requests and content updates. Proper use of these attributes is foundational to effective HTMX development.
+
+- **Use `hx-get` for read operations** and `hx-post` for write operations to align with RESTful conventions.
+- **Specify `hx-target`** with CSS selectors (e.g., `#result`) to control where server responses are inserted in the DOM.
+- **Leverage `hx-swap`** to define how content is updated (e.g., `innerHTML` for replacing content inside an element, `outerHTML` for replacing the element itself, `beforebegin` or `afterend` for positioning relative to the target).
+- **Use `hx-select`** to extract specific portions of a server response, reducing unnecessary DOM updates.
+- **Minimize attribute clutter** by grouping related functionality on parent elements where possible.
+
+**Example:**
+```html
+<button hx-get="/api/users" hx-target="#user-list" hx-swap="innerHTML">
+  Load Users
+</button>
+<div id="user-list"></div>
+```
+
+## Event Handling
+HTMX uses events to trigger actions, making event handling a core part of its workflow.
+
+- **Use `hx-trigger`** to specify when actions occur (e.g., `click`, `load`, `every 1s` for polling).
+- **Combine multiple triggers** with commas (e.g., `hx-trigger="click, keyup"`) for flexible event handling.
+- **Utilize `hx-on`** to attach custom JavaScript event handlers directly in HTML (e.g., `hx-on:click="console.log('Clicked!')"`).
+- **Leverage custom events** (e.g., `htmx:afterSwap`) for complex interactions, triggered via HTMX’s event system.
+- **Debounce or throttle events** using modifiers like `hx-trigger="keyup delay:500ms"` to prevent excessive requests.
+
+**Example:**
+```html
+<input hx-post="/search" hx-trigger="keyup delay:300ms" hx-target="#results" />
+<div id="results"></div>
+```
+
+## Forms and Validation
+HTMX simplifies form handling by enabling AJAX submissions, but validation remains critical.
+
+- **Use `hx-post` or `hx-get` on forms** to submit data asynchronously without full page reloads.
+- **Implement client-side validation** using HTML5 attributes (e.g., `required`, `pattern`) or lightweight JavaScript.
+- **Always validate on the server side** as a security measure, since client-side validation can be bypassed.
+- **Use `hx-validate`** to trigger validation before submission, ensuring data integrity.
+- **Provide user feedback** by targeting a specific element (e.g., `#error-msg`) with validation errors.
+
+**Example:**
+```html
+<form hx-post="/submit" hx-target="#response">
+  <input type="text" name="username" required>
+  <button type="submit">Submit</button>
+</form>
+<div id="response"></div>
+```
+
+## State Management
+HTMX adopts a server-centric approach, where the server manages state and returns HTML snippets.
+
+- **Rely on the server for state management**, keeping the client lightweight and stateless where possible.
+- **Use hidden inputs, cookies, or sessions** to persist state across requests when necessary.
+- **Avoid complex client-side state**; instead, let the server render the current state in HTML responses.
+- **Coordinate updates** to prevent conflicts when multiple HTMX requests affect overlapping DOM areas.
+- **Return consistent HTML snippets** from the server to maintain UI coherence.
+
+**Example:**
+```html
+<div hx-get="/user-status" hx-target="this" hx-swap="outerHTML">
+  <input type="hidden" name="userId" value="123">
+  Loading...
+</div>
+```
+
+## Security
+Dynamic content insertion introduces security risks that must be mitigated.
+
+- **Escape all user input** on the server to prevent Cross-Site Scripting (XSS) attacks.
+- **Use templating engines with auto-escaping** (e.g., Jinja2, Handlebars) for safe HTML rendering.
+- **Implement CSRF protection** for `hx-post` requests using tokens, aligning with form security best practices.
+- **Adopt a Content Security Policy (CSP)** to restrict script sources and reduce injection risks.
+- **Sanitize server responses** to ensure only trusted content is inserted into the DOM.
+
+## Performance Optimization
+HTMX’s frequent small HTTP requests require careful optimization.
+
+- **Minimize HTTP requests** by combining related actions into single endpoints where feasible.
+- **Use HTTP caching headers** (e.g., `ETag`, `Cache-Control`) to cache static or infrequently changing responses.
+- **Implement lazy loading** with `hx-trigger="revealed"` for content below the fold.
+- **Optimize server response times** by keeping partial HTML snippets lightweight and efficient.
+- **Batch requests** using HTMX extensions (e.g., WebSockets) for real-time updates instead of polling.
+
+**Example:**
+```html
+<div hx-get="/updates" hx-trigger="revealed" hx-target="this">
+  Loading updates...
+</div>
+```
+
+## Accessibility
+Dynamic updates must remain accessible to all users, including those using assistive technologies.
+
+- **Add ARIA attributes** to dynamically loaded content (e.g., `aria-live="polite"` for announcements).
+- **Test with screen readers** (e.g., NVDA, VoiceOver) to ensure compatibility.
+- **Provide fallbacks** for non-JavaScript users by ensuring server responses work as full pages if needed.
+- **Maintain focus management** after DOM updates using `hx-on` or JavaScript to set focus where appropriate.
+- **Avoid over-reliance on hover events**, preferring clickable triggers for better accessibility.
+
+**Example:**
+```html
+<div hx-get="/notifications" hx-target="this" aria-live="polite">
+  Loading notifications...
+</div>
+```
+
+## Debugging and Testing
+Effective debugging and testing ensure HTMX applications are reliable.
+
+- **Use browser dev tools** to inspect network requests and DOM changes triggered by HTMX.
+- **Enable HTMX logging** with `htmx.logAll()` to trace events and actions during development.
+- **Write unit tests for server-side endpoints** to verify correct HTML snippet generation.
+- **Use integration tests** to simulate HTMX interactions and validate UI updates.
+- **Monitor custom events** (e.g., `htmx:beforeRequest`) to debug request lifecycle issues.
+
+## Integration with Backend
+HTMX relies on server-side logic to drive the frontend, requiring seamless backend integration.
+
+- **Design endpoints to return partial HTML snippets** that HTMX can directly insert into the DOM.
+- **Handle errors gracefully** with appropriate HTTP status codes (e.g., 400 for validation errors) and error messages.
+- **Optimize server performance** to handle multiple small requests efficiently.
+- **Use consistent response formats** (e.g., HTML fragments) to simplify frontend integration.
+- **Support progressive enhancement** by ensuring endpoints work without HTMX when JavaScript is disabled.
+
+**Example Backend Response (Pseudo-code):**
+```python
+@app.get("/users")
+def get_users():
+    return "<ul><li>User 1</li><li>User 2</li></ul>"
+```
+
+## Using TypeScript with HTMX
+While HTMX is HTML-centric, TypeScript can enhance accompanying JavaScript and backend code.
+
+- **Use TypeScript for custom JavaScript** (e.g., event handlers) to catch errors early.
+- **Define interfaces for data** exchanged in HTMX requests and responses for type safety.
+- **Leverage TypeScript on the backend** (e.g., with Node.js) to type-check server-side logic.
+- **Type HTMX events** using TypeScript’s event system for better runtime reliability.
+- **Avoid overcomplicating the frontend**; keep TypeScript usage minimal unless necessary.
+
+**Example:**
+```typescript
+interface User {
+  name: string;
+  email: string;
+}
+
+htmx.on('#user-data', 'htmx:afterSwap', (event) => {
+  const data: User = JSON.parse(event.detail.xhr.responseText);
+  console.log(data.name);
+});
+```
+
+## Naming Conventions
+Consistent naming improves maintainability in HTMX projects.
+
+- **Use clear, descriptive names for HTML IDs and classes** (e.g., `#user-list`, `.notification-item`).
+- **Follow a CSS naming convention like BEM** (e.g., `block__element--modifier`) to avoid selector conflicts.
+- **Name server endpoints consistently** (e.g., `/partials/user-list` for partial HTML snippets).
+- **Prefix custom events** with a namespace (e.g., `myapp:update`) to prevent clashes.
+- **Use verb-noun patterns** for JavaScript functions (e.g., `handleFormSubmit`) interacting with HTMX.

@@ -1,0 +1,74 @@
+---
+description: 
+globs: src/**/*.tsx,src/**/*.jsx,src/**/*.svelte,src/**/*.vue,src-tauri/**/*.json,src-tauri/Cargo.toml,src-tauri/**/*.rs
+alwaysApply: false
+---
+# Tauri 2.0 Best Practices
+
+## Project Structure
+- **Separate Frontend and Backend**: Organize your project with a clear distinction between frontend (webview) and backend (Rust) code.
+- **Frontend Directory**: Place frontend code in a `src` directory (or a similar convention based on your frontend framework, e.g., React, Vue).
+  - Use subdirectories for route-specific components if using a router (e.g., `src/routes`).
+  - Place shared components in `src/components`.
+  - Place utilities and helpers in `src/lib`.
+- **Backend Directory**: Place Rust backend code in the `src-tauri` directory.
+  - Follow Rust’s module system for organizing backend code (e.g., `src-tauri/src/main.rs`, `src-tauri/src/lib.rs`).
+- **Naming Convention**: Use lowercase with dashes for directories (e.g., `components/auth-wizard`).
+
+## Components
+- **Efficiency**: Design components to minimize resource usage, as Tauri apps run on desktop environments with varying hardware capabilities.
+- **Backend Interaction**: Use Tauri’s API (`invoke`) to call Rust backend functions from the frontend.
+- **Error Handling**: Implement proper error handling for backend calls to ensure a robust user experience.
+- **Asynchronous Operations**: Consider using Suspense or similar patterns in your frontend framework for handling asynchronous backend interactions.
+- **File Organization**: Place static content (e.g., constants) and interfaces at the end of files for better readability.
+
+## Performance
+- **Asset Optimization**: Optimize images and assets by using appropriate formats (e.g., WebP), compressing them, and implementing lazy loading when possible.
+- **Minimize Frontend Load**: Offload heavy computations to the Rust backend instead of the frontend to reduce resource demands.
+- **State Efficiency**: Use efficient state management to avoid unnecessary re-renders in the frontend (e.g., React’s `useMemo`, `useCallback`).
+- **Lazy Loading**: Implement lazy loading for non-critical components or features to improve startup time.
+- **Resource Monitoring**: Monitor and optimize the app’s memory and CPU usage, leveraging tools like Tauri’s debugging capabilities.
+
+## Data Fetching
+- **Local Data**: Use Tauri’s file system APIs (e.g., `@tauri-apps/api/fs`) for accessing local files or databases on the user’s machine.
+- **Error Handling**: Implement proper error handling for all data operations, including file access and network requests.
+- **Caching**: Use caching strategies for frequently accessed data to reduce redundant operations.
+- **UI Feedback**: Handle loading and error states in the UI to keep users informed.
+- **Remote Data**: For network requests, handle offline scenarios and slow connections gracefully, providing fallback options where applicable.
+
+## Routing
+- **Frontend Router**: Follow best practices for your chosen frontend router (e.g., React Router for React-based Tauri apps), as Tauri itself does not provide routing.
+- **Route States**: Implement proper loading and error states for route transitions to enhance user experience.
+- **Dynamic Routes**: Use dynamic routing appropriately, ensuring flexibility and maintainability.
+- **Security**: Ensure routes are secure and handle permissions if they expose sensitive functionality.
+
+## Forms and Validation
+- **Validation Libraries**: Use libraries like Zod for form validation in the frontend, ensuring data integrity.
+- **Backend Validation**: If forms submit data to a backend (local or remote), implement server-side validation in Rust for additional security.
+- **Error Handling**: Handle form errors gracefully, providing clear feedback to users.
+- **Loading States**: Show loading states during form submissions or data processing to indicate progress.
+
+## State Management
+- **Frontend State**: Use state management solutions suited to your frontend framework (e.g., React Context, Redux).
+- **Minimize Client State**: Keep client-side state minimal, leveraging the Rust backend for complex state logic when possible.
+- **Tauri Features**: Utilize Tauri’s state management or event system (e.g., `@tauri-apps/api/event`) for coordination between frontend and backend.
+- **Synchronization**: Ensure proper synchronization between frontend and backend state to maintain consistency.
+- **Loading States**: Handle loading states for asynchronous state updates to improve responsiveness.
+
+## Security
+- **Input Sanitization**: Ensure the Rust backend sanitizes all inputs to prevent injection attacks or unexpected behavior.
+- **Capabilities System**: Use Tauri’s capabilities system to define and restrict what the frontend can access in the backend.
+- **Dependency Management**: Keep all dependencies (Rust crates, npm packages) up to date to mitigate known vulnerabilities.
+- **Error Handling**: Implement error handling that avoids leaking sensitive information to the user.
+
+## Cross-Platform Development
+- **Testing**: Test the app on all target platforms (Windows, macOS, Linux) to ensure consistent behavior.
+- **Platform Differences**: Handle platform-specific differences in UI or functionality (e.g., file system paths, native dialogs).
+- **Platform Detection**: Use Tauri’s platform detection features (e.g., `@tauri-apps/api/os`) when conditional logic is needed.
+- **Consistency**: Ensure file paths and system interactions work correctly across platforms.
+
+## Bundling and Distribution
+- **Configuration**: Configure the bundler in `tauri.conf.json` appropriately for each platform, specifying icons, identifiers, and other settings.
+- **App Signing**: Sign the app for platforms that require it (e.g., macOS) to ensure trust and compatibility.
+- **Updates**: Implement an update mechanism using Tauri’s updater if the app needs to check for new versions.
+- **Resource Inclusion**: Ensure all necessary resources (e.g., assets, frontend bundles) are properly included in the final bundle.
