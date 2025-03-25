@@ -4,7 +4,7 @@ This is my collection of rules for Cursor Agentic Coding. Its a mix of my own ru
 
 ## Installation
 
-Requires [gum](https://github.com/charmbracelet/gum) and [jq](https://stedolan.github.io/jq/). Will auto install these if you have Homebrew installed.
+Requires [gum](https://github.com/charmbracelet/gum) and [jq](https://jqlang.org/). Will auto install these if you have Homebrew installed.
 
 Simply run the following command in your project root.
   
@@ -25,6 +25,8 @@ curl -sL https://smolurl.cc/xrMdThwr_g -o /tmp/install.sh && chmod +x /tmp/insta
 | [javascript.mdc](languages/javascript.mdc) | Details JavaScript best practices and patterns for modern web development. |
 | [python.mdc](languages/python.mdc) | Specifies Python coding standards with focus on Flask and SQLite integration. |
 | [rust.mdc](languages/rust.mdc) | Contains Rust programming guidelines and best practices. |
+| [solidity.mdc](languages/solidity.mdc) | Provides Solidity-specific coding standards using Foundry and best practices for Ethereum smart contracts. |
+| [godot.mdc](languages/godot.mdc) | Provides Godot-specific coding standards and best practices for modern Godot game development. |
 | [typescript.mdc](languages/typescript.mdc) | Outlines TypeScript-specific coding standards and type system best practices. |
 | [ecmascript.mdc](frameworks/ecmascript.mdc) | Provides guidelines for modern ECMAScript features and best practices. |
 | [express.mdc](frameworks/express.mdc) | Details Express.js framework-specific patterns and best practices for Node.js web applications. |
@@ -44,7 +46,7 @@ Some of the rules I needed (mainly Go and Rust) were missing, so I had to make s
 2. Give it an example of a good rules file and tell it to use the research to make a new rules file.
 3. Copy the rules into a new file.
 
-And that's it!
+And that's it! See the [prompts.md](prompts.md) file for the exact prompts I used.
 
 ## What Makes a Good Rules File?
 

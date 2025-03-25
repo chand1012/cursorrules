@@ -1,0 +1,71 @@
+---
+description: 
+globs: src/**/*.sol,test/**/*.sol,script/**/*.sol
+alwaysApply: false
+---
+# Solidity Foundry Development Best Practices
+
+This document provides guidelines for writing smart contracts in Solidity using the Foundry framework. It adapts concepts from TypeScript best practices to suit Solidity's unique type system, execution environment, and Foundry's tooling.
+
+## Type System
+- Use **interfaces** to define function signatures for external contract interactions (e.g., ERC20 interfaces).
+- Prefer **structs** to group related data into a single unit (e.g., `struct User { address addr; uint256 balance; }`).
+- Use **enums** to represent discrete states or options (e.g., `enum Status { Pending, Active, Closed }`).
+- Leverage **mappings** for efficient key-value storage (e.g., `mapping(address => uint256) balances`).
+- Use **custom types** (Solidity 0.8.8+) for clarity and type safety (e.g., `type UserId is uint256;`).
+
+## Naming Conventions
+- Use **PascalCase** for contract, struct, enum, and interface names (e.g., `MyContract`, `UserStruct`).
+- Use **camelCase** for function and variable names (e.g., `transferFunds`, `userBalance`).
+- Use **UPPER_CASE** for constants (e.g., `MAX_SUPPLY`, `FEE_PERCENT`).
+- Use descriptive names with auxiliary verbs where applicable (e.g., `isPaused`, `hasRole`).
+- Prefix events with `Log` for clarity (e.g., `event LogTransfer(address from, address to, uint256 amount)`).
+
+## Code Organization
+- Follow Foundry's default project structure:
+  - `src/` for smart contracts.
+  - `test/` for test files (use `.t.sol` suffix for test contracts).
+  - `script/` for deployment and interaction scripts written in Solidity.
+  - `lib/` for external dependencies (managed as git submodules).
+- Keep related contracts in the same file or directory for logical grouping.
+- Use **libraries** for reusable code (e.g., math operations, string utilities).
+- Organize imports at the top of the file, grouped by source (e.g., local files, OpenZeppelin contracts).
+- Include an **SPDX license identifier** at the top of each file (e.g., `// SPDX-License-Identifier: MIT`).
+
+## Functions
+- Always specify **function visibility** (`public`, `private`, `internal`, `external`) to control access.
+- Specify **state mutability** (`pure`, `view`, `payable`) to clarify intent and optimize gas usage.
+- Use **modifiers** for reusable logic and access control (e.g., `onlyOwner`, `nonReentrant`).
+- Implement error handling with `require` for input validation, `assert` for invariants, and `revert` for custom conditions.
+- Use **internal functions** for code reuse within a contract to reduce redundancy.
+
+## Best Practices
+- **Security**:
+  - Prevent reentrancy attacks using the checks-effects-interactions pattern or `nonReentrant` modifiers.
+  - Use built-in overflow/underflow checks (Solidity 0.8.0+) or SafeMath for older versions.
+  - Validate all inputs with `require` to enforce preconditions.
+- **Gas Optimization**:
+  - Minimize storage operations (e.g., use memory variables where possible).
+  - Choose efficient data types (e.g., `uint256` for most cases, smaller types like `uint8` when safe).
+  - Avoid unbounded loops and complex computations on-chain.
+- Write clear, concise code with comments explaining complex logic or intent.
+- Use the latest Solidity version supported by Foundry to benefit from new features and optimizations.
+- Leverage Foundry's testing tools:
+  - Write tests in Solidity for seamless integration.
+  - Use **fuzz testing** to explore edge cases.
+  - Use **invariant testing** to verify protocol properties.
+  - Utilize **cheatcodes** (e.g., `vm.prank` for impersonation, `vm.warp` for time manipulation) in tests.
+
+## Error Handling
+- Define **custom errors** for specific failure conditions (e.g., `error Unauthorized();`) to save gas and improve readability.
+- Use `revert` with custom errors instead of strings for gas efficiency (e.g., `revert Unauthorized();`).
+- Handle external call failures with `try-catch` (Solidity 0.8.0+) when interacting with other contracts.
+- Use `assert` for invariants that should never fail (e.g., `assert(totalSupply <= maxSupply);`).
+- Emit events for errors or significant state changes to support debugging and off-chain monitoring.
+
+## Patterns
+- Use the **factory pattern** to deploy multiple contract instances dynamically (e.g., a factory for creating token contracts).
+- Implement **access control** with patterns like `Ownable` (single owner) or `AccessControl` (role-based permissions).
+- Use the **proxy pattern** for upgradeable contracts to separate logic and storage (e.g., via OpenZeppelin’s proxy contracts).
+- Leverage **libraries** for common functionality (e.g., math operations, string manipulation).
+- Emit **events** to log critical actions and state changes (e.g., `Transfer`, `Approval`) for transparency.

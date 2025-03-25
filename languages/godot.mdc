@@ -1,0 +1,57 @@
+---
+description: 
+globs: **/*.gd,**/*.tscn,**/*.tres
+alwaysApply: false
+---
+# Godot Best Practices
+
+## Node and Scene System
+- Use scenes for visual and structural elements, and scripts for behavior and logic
+- Keep scenes modular and focused on specific game parts (e.g., player, UI, level)
+- Leverage scene inheritance for reusability (e.g., base enemy scene)
+- Manage scene transitions efficiently to maintain performance, especially on mobile
+- Use `autoload` for global services like game managers, but avoid tight coupling
+
+## Naming Conventions
+- Follow the [official GDScript style guide](mdc:https:/docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html)
+- Use `snake_case` for variables, functions, and script files
+- Use `PascalCase` for class names and node types
+- Prefix node names with their type for clarity (e.g., `PlayerSprite`, `EnemyArea`)
+- Use descriptive names with auxiliary verbs for booleans (e.g., `is_moving`, `has_collided`)
+
+## Code Organization
+- Organize files by feature, not by type (e.g., keep player scene, script, and assets together)
+- Use a consistent folder structure (e.g., `scenes/`, `scripts/`, `assets/`)
+- Place shared resources in a `resources/` directory
+- Use `export` variables for editor-configurable properties
+- Keep scripts focused; use utility scripts for non-node logic
+
+## Functions (Methods in GDScript)
+- Use explicit parameter and return types where possible (e.g., `func move(direction: Vector2) -> void:`)
+- Prefer signals over direct method calls for decoupled communication
+- Keep methods short and focused on a single responsibility
+- Use `_init()` for initialization and `_ready()` for setup requiring the scene tree
+- Use `_process()` and `_physics_process()` appropriately for game loops
+
+## Best Practices
+- Follow the "call down, signal up" approach for node communication
+- Prefer composition over deep inheritance for flexibility
+- Use custom `Resource` types for data management (e.g., character stats)
+- Optimize performance for the target platform (e.g., mobile vs. desktop)
+- Write unit tests for complex logic using Godot's built-in testing framework
+- Use the Godot editor's features like the debugger and profiler
+- Stick to one Godot version per project to avoid compatibility issues
+
+## Error Handling
+- Use `assert` statements for debugging and invariant checks
+- Log errors with `push_error()` and warnings with `push_warning()`
+- Handle errors gracefully in release builds (e.g., fallback behaviors)
+- Use signals to propagate errors or state changes when appropriate
+- Implement custom error types using `enum` for domain-specific errors
+
+## Patterns
+- Use the Singleton pattern via `autoload` for global managers (e.g., `GameManager`)
+- Implement the State pattern for managing game states (e.g., menu, playing, paused)
+- Use the Observer pattern with signals for event-driven systems
+- Leverage the Factory pattern for spawning game objects (e.g., enemies, items)
+- Use the Component pattern for flexible entity behavior (e.g., attaching behaviors to nodes)
