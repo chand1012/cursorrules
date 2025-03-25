@@ -9,7 +9,7 @@ Requires [gum](https://github.com/charmbracelet/gum) and [jq](https://stedolan.g
 Simply run the following command in your project root.
   
 ```bash
-curl -sL https://smolurl.cc/08t2JlArmw | bash 
+curl -sL https://smolurl.cc/xrMdThwr_g | bash 
 ```
 
 ## Rules
