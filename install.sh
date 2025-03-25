@@ -38,7 +38,7 @@ check_command "curl"
 check_command "jq"
 
 # GitHub API base URL
-GITHUB_API="https://api.github.com/repos/chand1012/llmrules/contents"
+GITHUB_API="https://api.github.com/repos/chand1012/cursorrules/contents"
 
 # Function to fetch and format options from GitHub
 fetch_options() {
@@ -90,17 +90,17 @@ if gum confirm "Proceed with installation?"; then
     # Download selected items
     for framework in $FRAMEWORK_CHOICES; do
         gum style --foreground 183 "Downloading framework: $framework"
-        curl -s "https://raw.githubusercontent.com/chand1012/llmrules/main/frameworks/$framework" > .cursor/rules/$framework
+        curl -s "https://raw.githubusercontent.com/chand1012/cursorrules/main/frameworks/$framework" > .cursor/rules/$framework
     done
 
     for language in $LANGUAGE_CHOICES; do
         gum style --foreground 183 "Downloading language: $language"
-        curl -s "https://raw.githubusercontent.com/chand1012/llmrules/main/languages/$language" > .cursor/rules/$language
+        curl -s "https://raw.githubusercontent.com/chand1012/cursorrules/main/languages/$language" > .cursor/rules/$language
     done
 
     for practice in $PRACTICE_CHOICES; do
         gum style --foreground 183 "Downloading practice: $practice"
-        curl -s "https://raw.githubusercontent.com/chand1012/llmrules/main/practice/$practice" > .cursor/rules/$practice
+        curl -s "https://raw.githubusercontent.com/chand1012/cursorrules/main/practice/$practice" > .cursor/rules/$practice
     done
 
     gum style --bold --foreground 183 "Installation complete!"
