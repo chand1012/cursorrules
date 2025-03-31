@@ -1,0 +1,116 @@
+---
+description: 
+globs: **/README.md
+alwaysApply: false
+---
+# GitHub README Best Practices for Open-Source Projects
+
+## Introduction
+A GitHub README is the gateway to an open-source project, serving as the primary resource for users and contributors. It should clearly explain what the project does, how to use it, and how to get involved, all while being well-organized and engaging. This guide provides best practices for an LLM to write a README, leveraging its ability to generate clear text and code snippets, while noting where visuals could be added by others.
+
+## General Writing Principles
+- Use **clear and concise language** to ensure accessibility for all readers, including beginners and non-native speakers.
+- Adopt an **inclusive and welcoming tone** to encourage participation from diverse contributors.
+- Maintain a **professional yet friendly style** to reflect the project's quality and foster community.
+- Ensure **proper grammar and spelling** using tools like spell checkers to polish the text.
+- Format **code snippets** with Markdown's triple backticks and specify the language (e.g., ```bash) for readability.
+
+## README Structure
+- Include standard sections: **Project Overview**, **Installation**, **Usage**, **Contributing**, **License**, etc.
+- Use **Markdown headers** (`#` for main sections, `##` for subsections) to create a logical flow.
+- Order sections intuitively, starting with an introduction and progressing to detailed instructions.
+
+## Project Overview
+- **Describe the project**: Start with a brief, compelling summary of what the project does. Example: "A lightweight Rust web framework for building fast, scalable APIs."
+- **Highlight purpose and value**: Explain why the project exists and its unique features (e.g., "Designed for simplicity and performance, unlike heavier alternatives").
+- **Target the audience**: Specify who the project is for if not obvious (e.g., "Ideal for Rust developers new to web programming").
+- **Keep it short**: Limit this to 2-3 paragraphs to retain reader interest.
+
+## Installation Instructions
+- **List prerequisites**: Detail required software or libraries (e.g., "Requires Rust 1.50+ and Cargo").
+- **Provide step-by-step commands**: Use code blocks for clarity. Example:
+  ```bash
+  git clone https://github.com/user/project.git
+  cd project
+  cargo build --release
+  ```
+- **Address multiple platforms**: Include variations for different OSes if applicable (e.g., "On Windows, use `cargo build` without sudo").
+- **Test instructions**: Ensure commands are accurate and reproducible.
+
+## Usage Examples
+- **Demonstrate functionality**: Provide practical examples of how to use the project. Example:
+  ```rust
+  use project::App;
+
+  fn main() {
+      let app = App::new();
+      app.route("/hello", |req| "Hello, world!");
+      app.run(8080);
+  }
+  ```
+- **Explain the code**: Follow snippets with plain-language descriptions (e.g., "This sets up a server responding with 'Hello, world!' on port 8080").
+- **Show outputs**: Describe expected results (e.g., "Visiting `localhost:8080/hello` displays 'Hello, world!'").
+- **Suggest visuals**: Note where images could help (e.g., "A screenshot of the server output would clarify this step").
+
+## Contributing Guidelines
+- **Welcome contributions**: State that all skill levels are encouraged to participate.
+- **Link to details**: Reference a `CONTRIBUTING.md` file if available (e.g., "See [Contributing](./CONTRIBUTING.md) for more").
+- **Outline processes**: Briefly explain how to submit issues or pull requests (e.g., "File bugs on GitHub Issues; PRs should include tests").
+- **Set expectations**: Mention coding standards or requirements (e.g., "Follow Rustfmt and pass Clippy checks").
+
+## License
+- **Specify the license**: Clearly state the terms (e.g., "Licensed under MIT").
+- **Include or link**: Add the full text or link to a `LICENSE` file (e.g., "[MIT License](./LICENSE)").
+- **Guide selection**: Suggest using [choosealicense.com](https://choosealicense.com/) if undecided.
+
+## Badges
+- **Display status**: Use badges for build status, version, etc. Example:
+  ```markdown
+  ![Build](https://img.shields.io/badge/build-passing-green)
+  ![License](https://img.shields.io/badge/license-MIT-blue)
+  ```
+- **Source badges**: Recommend services like [shields.io](https://shields.io/) and link them to relevant pages.
+- **Place strategically**: Position badges at the top for immediate visibility.
+
+## Dependencies
+- **List clearly**: Include all runtime and dev dependencies. Example:
+  ```markdown
+  - `serde` (v1.0) - Serialization framework
+  - `tokio` (v0.2) - Async runtime
+  ```
+- **Use tables for complexity**: For many dependencies, format as:
+  | Dependency | Version | Purpose          |
+  |------------|---------|------------------|
+  | `serde`    | 1.0     | Serialization    |
+  | `tokio`    | 0.2     | Async processing |
+- **Keep updated**: Reflect the latest `Cargo.toml` or equivalent.
+
+## Support
+- **Offer help channels**: List contact options (e.g., "Join our [Discord](https://discord.gg/xyz) or email support@project.com").
+- **Encourage issues**: Point to GitHub Issues (e.g., "Report bugs at [Issues](https://github.com/user/project/issues)").
+- **Set response tone**: Assure timely replies (e.g., "We aim to respond within 48 hours").
+
+## Credits
+- **Recognize contributors**: Name key individuals or teams (e.g., "Thanks to @alice and @bob").
+- **Link profiles**: Use GitHub handles or URLs (e.g., "[@alice](https://github.com/alice)").
+- **Reference GitHub**: Suggest viewing all contributors via the repository’s contributor graph.
+
+## Visual Suggestions
+- **Recommend types**: Suggest screenshots, diagrams, or GIFs (e.g., "A GIF of the app running would show its speed").
+- **Describe placement**: Advise proximity to relevant text (e.g., "Place a terminal screenshot after installation steps").
+- **Acknowledge limits**: Note that LLMs can’t create visuals but can describe them (e.g., "Diagram the request flow here").
+- **Mention tools**: Suggest [Asciinema](https://asciinema.org/) or [ttygif](https://github.com/icholy/ttygif) for terminal demos.
+
+## Formatting and Style
+- **Leverage Markdown**: Use headers, lists, tables, and emphasis (e.g., **bold**, *italics*).
+- **Organize content**: Break long sections into subsections for skimmability.
+- **Highlight key points**: Use bold or code blocks to draw attention (e.g., **Run `cargo test`**).
+
+## Maintenance
+- **Update regularly**: Revise the README with project changes to avoid outdated info.
+- **Use relative links**: Link to repo files with `./` (e.g., `./docs/setup.md`) for branch compatibility.
+- **Test usability**: Follow the README steps to confirm they work as written.
+- **Seek feedback**: Encourage community input to refine the document.
+
+## Conclusion
+A stellar README enhances a project's accessibility and appeal, driving adoption and collaboration. By following these guidelines, an LLM can craft a README that’s informative, structured, and community-friendly, even without visuals. Keep it current and open to improvement for lasting impact.
