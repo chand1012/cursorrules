@@ -1,0 +1,109 @@
+---
+description: SQL coding standards and best practices for PostgreSQL
+globs: **/*.sql
+---
+
+# PostgreSQL Best Practices
+
+## Schema Design
+- **Choose appropriate data types** to optimize storage and performance:
+  - Use `INT` or `BIGINT` for integers, `VARCHAR(n)` or `TEXT` for strings, and `TIMESTAMP WITH TIME ZONE` for dates.
+  - Example: `CREATE TABLE users (id SERIAL PRIMARY KEY, name VARCHAR(50), created_at TIMESTAMP WITH TIME ZONE);`
+- **Normalize tables** to eliminate redundancy, but denormalize strategically for read-heavy workloads.
+- **Enforce data integrity** with constraints:
+  - `PRIMARY KEY` for unique row identification.
+  - `FOREIGN KEY` for referential integrity (e.g., `user_id INT REFERENCES users(id)`).
+  - `UNIQUE` and `CHECK` for additional rules (e.g., `CHECK (age >= 0)`).
+- **Use PostgreSQL-specific types** like `JSONB` for semi-structured data or `UUID` for unique identifiers.
+
+## Query Writing
+- **Specify explicit columns** in `SELECT` instead of `SELECT *` for clarity and performance.
+  - Example: `SELECT id, name FROM users WHERE active = true;`
+- **Write efficient JOINs** with indexed columns and appropriate types (`INNER JOIN`, `LEFT JOIN`, etc.).
+- **Use parameterized queries** to prevent SQL injection and improve performance:
+  - Example: `SELECT * FROM users WHERE id = $1 AND status = $2;`
+- **Limit result sets** with `LIMIT` and `OFFSET` for pagination, or use keyset pagination for large datasets:
+  - Example: `SELECT * FROM orders WHERE id > $1 ORDER BY id LIMIT 10;`
+
+## Indexing Strategies
+- **Create indexes** on columns in `WHERE`, `JOIN`, and `ORDER BY` clauses:
+  - Example: `CREATE INDEX idx_users_name ON users (name);`
+- **Select the right index type**:
+  - **B-tree**: For equality and range queries (default).
+  - **GIN**: For `JSONB`, arrays, or full-text search.
+  - **GiST**: For spatial or geometric data.
+- **Use composite indexes** for multi-column filters:
+  - Example: `CREATE INDEX idx_orders_date_customer ON orders (order_date, customer_id);`
+- **Avoid over-indexing** to maintain write performance; remove unused indexes using `pg_stat_user_indexes`.
+
+## PostgreSQL-Specific Features
+- **Window functions**: Perform calculations across rows:
+  - Example: `SELECT name, salary, RANK() OVER (PARTITION BY dept ORDER BY salary DESC) FROM employees;`
+- **Common Table Expressions (CTEs)**: Simplify complex queries:
+  - Example: `WITH active_users AS (SELECT * FROM users WHERE active = true) SELECT * FROM active_users;`
+- **Full-text search**: Use `tsvector` and `tsquery`:
+  - Example: `SELECT title FROM articles WHERE to_tsvector(content) @@ to_tsquery('database & performance');`
+- **JSONB**: Query semi-structured data:
+  - Example: `SELECT data->>'email' FROM profiles WHERE data->>'age'::int > 25;`
+
+## Code Organization
+- **Use schemas** to group related tables and views (e.g., `auth`, `reporting`).
+- **Encapsulate logic** in views or functions for reuse:
+  - Example: `CREATE VIEW active_users AS SELECT * FROM users WHERE active = true;`
+- **Keep SQL files modular** by separating schema creation, indexes, and queries into distinct files.
+
+## Functions and Methods
+- **Use stored procedures or functions** for reusable logic:
+  - Example: `CREATE FUNCTION get_user_count() RETURNS INT AS $$ SELECT COUNT(*) FROM users; $$ LANGUAGE SQL;`
+- **Keep functions focused** on a single task and use parameters for flexibility.
+
+## Best Practices
+- **Optimize queries** by leveraging indexes and avoiding unnecessary data retrieval.
+- **Maintain data integrity** with constraints and transactions.
+- **Write secure SQL** with parameterized queries and minimal permissions.
+- **Use EXPLAIN** to analyze query performance:
+  - Example: `EXPLAIN SELECT * FROM orders WHERE customer_id = 123;`
+- **Update statistics** with `ANALYZE` to ensure the query planner works effectively.
+
+## Error Handling
+- **Handle exceptions** in functions or transactions:
+  - Example:
+    ```sql
+    DO $$
+    BEGIN
+        INSERT INTO users (name) VALUES ('Test');
+    EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'Duplicate entry detected';
+    END;
+    $$;
+    ```
+- **Use transactions** to rollback on errors (see Transaction Management).
+
+## Transaction Management
+- **Wrap multi-statement operations** in transactions:
+  - Example:
+    ```sql
+    BEGIN;
+    UPDATE accounts SET balance = balance - 50 WHERE id = 1;
+    UPDATE accounts SET balance = balance + 50 WHERE id = 2;
+    COMMIT;
+    ```
+- **Use savepoints** for partial rollbacks:
+  - Example: `SAVEPOINT sp1; ROLLBACK TO sp1;`
+
+## Performance Tuning
+- **Analyze query plans** with `EXPLAIN ANALYZE` to identify bottlenecks.
+- **Monitor slow queries** using `pg_stat_statements` or log settings.
+- **Tune configurations** like `work_mem` and `shared_buffers` for your workload.
+
+## Documentation
+- **Add comments** to explain intent:
+  - Example: `-- Retrieve all active users ordered by registration date`
+- **Document views and functions** with purpose and usage:
+  - Example: `COMMENT ON FUNCTION get_user_count IS 'Returns total number of users';`
+
+## Security Practices
+- **Prevent SQL injection** with parameterized queries.
+- **Restrict access** using roles and privileges:
+  - Example: `GRANT SELECT ON users TO read_only_role;`
+- **Encrypt sensitive data** with `pgcrypto` or application-level encryption.

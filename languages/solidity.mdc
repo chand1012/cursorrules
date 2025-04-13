@@ -1,6 +1,6 @@
 ---
 description: 
-globs: src/**/*.sol,test/**/*.sol,script/**/*.sol
+globs: **/*.sol
 alwaysApply: false
 ---
 # Solidity Foundry Development Best Practices

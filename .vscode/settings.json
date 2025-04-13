@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.mdc": "markdown",
+  },
+  "[markdown]": {
+    "files.autoSave": "onFocusChange"
+  }
+}

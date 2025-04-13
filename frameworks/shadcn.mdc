@@ -1,0 +1,87 @@
+---
+description: 
+globs: **/*.tsx,**/*.jsx
+alwaysApply: false
+---
+# Shadcn Best Practices for React Projects
+
+## Component Usage
+- **Adding missing components**: If a component is missing, always add it via the CLI tool like so: `npx -y shadcn@latest add button`. Replace `button` with the component you're trying to add.
+- **Importing Components**: Import Shadcn components from their designated files as set up by the Shadcn CLI. For example:
+  ```typescript
+  import { Button } from '@/components/ui/button';
+  ```
+- **Props Handling**: Pass props according to the component’s documented API, ensuring all required props are provided. Use TypeScript to enforce type safety for props and event handlers.
+- **Composition**: Utilize the `asChild` prop (where supported) to compose components with custom elements or other components, maintaining Shadcn’s functionality. Example:
+  ```typescript
+  <Button asChild><a href="/link">Link Button</a></Button>
+  ```
+
+## Customization
+- **Tailwind CSS Styling**: Customize components using Tailwind CSS utility classes directly in the `className` prop. For example:
+  ```typescript
+  <Button className="bg-green-600 hover:bg-green-700">Click Me</Button>
+  ```
+- **Wrapper Components**: For reusable or complex customizations, create wrapper components instead of modifying Shadcn source files. This preserves update compatibility. Example:
+  ```typescript
+  const CustomButton = ({ children, ...props }: ButtonProps) => (
+    <Button {...props} className="my-custom-style">{children}</Button>
+  );
+  ```
+- **Preserve Originals**: Avoid editing Shadcn component files directly to simplify updates via the CLI.
+
+## Type Safety
+- **Prop Interfaces**: Define TypeScript interfaces for custom components that extend Shadcn’s props. For example:
+  ```typescript
+  interface CustomButtonProps extends ButtonProps {
+    customLabel: string;
+  }
+  ```
+- **Type Inference**: Rely on TypeScript’s type inference for Shadcn components where possible, reducing redundant type definitions.
+- **Strict Typing**: Ensure all custom components and their props are fully typed to catch errors at compile time.
+
+## Accessibility
+- **Radix UI Features**: Leverage Radix UI’s accessibility foundations (e.g., ARIA attributes, keyboard navigation) inherent in Shadcn components.
+- **Custom Enhancements**: Maintain accessibility in custom components by adding appropriate ARIA roles and ensuring focus management.
+- **Semantic Structure**: Use semantic HTML elements (e.g., `<button>`, `<nav>`) within Shadcn components to enhance accessibility and SEO.
+
+## Code Organization
+- **Directory Structure**: Store Shadcn components in the `components/ui` directory as initialized by the CLI. Place custom components in a separate directory, such as `components/custom`.
+- **Barrel Exports**: Use `index.ts` files for cleaner imports. For example:
+  ```typescript
+  // components/custom/index.ts
+  export * from './CustomButton';
+  ```
+- **Shared Types**: Define shared types or interfaces in a `types` directory if they are reused across multiple components.
+
+## Styling
+- **Utility Classes**: Apply Tailwind CSS utility classes for consistent and maintainable styling. Example:
+  ```typescript
+  <Card className="p-4 shadow-lg">Content</Card>
+  ```
+- **Theming**: Use CSS variables in `globals.css` for custom theming. Example:
+  ```css
+  :root {
+    --primary-bg: #1e90ff;
+  }
+  ```
+- **Style Scoping**: Ensure styles are applied specifically to avoid unintended overrides, especially with global Tailwind configurations.
+
+## Performance
+- **Memoization**: Wrap components with React’s `memo` to prevent unnecessary re-renders when props are unchanged. Example:
+  ```typescript
+  const MemoizedButton = memo(CustomButton);
+  ```
+- **State Optimization**: Manage state efficiently to minimize re-renders, particularly in interactive Shadcn components like forms or dialogs.
+- **Asset Management**: Optimize images and other assets used within components to reduce load times.
+
+## Testing
+- **Testing Tools**: Use Jest and React Testing Library to test Shadcn-based components for functionality and rendering.
+- **Unit Tests**: Write tests for custom components to verify behavior. Example:
+  ```typescript
+  test('CustomButton renders correctly', () => {
+    render(<CustomButton>Click</CustomButton>);
+    expect(screen.getByText('Click')).toBeInTheDocument();
+  });
+  ```
+- **Accessibility Checks**: Integrate tools like axe-core to ensure components meet accessibility standards.

@@ -1,6 +1,7 @@
 ---
 description: Go coding standards and best practices for modern development
 globs: **/*.go
+alwaysApply: false
 ---
 
 # Go Best Practices
