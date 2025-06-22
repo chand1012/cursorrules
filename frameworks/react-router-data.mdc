@@ -1,0 +1,70 @@
+---
+description: 
+globs: **/*.tsx,**/*.jsx
+alwaysApply: false
+---
+# React Router Data Mode Best Practices
+
+## Route Configuration
+- Use `createBrowserRouter` for Data Mode setup
+- Define loaders and actions at the route level
+- Implement nested routes for layout organization
+- Use lazy loading for routes and components
+- Include error boundaries in route definitions
+- Specify `shouldRevalidate` to control data fetching
+
+## Loaders
+- Decouple data fetching from components
+- Ensure type safety with TypeScript or Zod
+- Handle loading states with `Suspense` and `Outlet`
+- Use `useLoaderData` for accessing loader data
+- Implement authentication checks in loaders
+- Optimize with lazy-loaded loaders
+
+## Actions
+- Use `<Form>` for declarative form submissions
+- Leverage `useSubmit` for programmatic submissions
+- Utilize `useFetcher` for non-navigating actions
+- Differentiate between client and server actions
+- Implement redirects after successful actions
+- Prefer uncontrolled forms for simplicity
+
+## Components
+- Use route props for type-safe data access
+- Implement error boundaries for robust error handling
+- Create reusable components for forms and UI
+- Use `<Outlet>` for rendering nested routes
+- Keep components focused on single responsibilities
+- Avoid manual data fetching in components
+
+## Navigation
+- Use `<Link>` for declarative navigation
+- Implement `useNavigate` for programmatic navigation
+- Handle navigation states with `useNavigation`
+- Ensure loaders are triggered on navigation
+- Provide feedback during navigation transitions
+- Avoid direct URL manipulation
+
+## Performance
+- Lazy-load routes, loaders, and components
+- Control revalidation with `shouldRevalidate`
+- Use `Suspense` for efficient loading states
+- Optimize loader data fetching with caching
+- Avoid unnecessary loader calls
+- Profile navigation performance
+
+## Error Handling
+- Define error boundaries in routes
+- Use `useRouteError` for error access
+- Display user-friendly error messages
+- Implement fallback UI for errors
+- Handle loader and action errors gracefully
+- Log errors for debugging
+
+## Type Safety
+- Use TypeScript for route parameters and data
+- Validate loader data with Zod or similar
+- Type route props for component safety
+- Ensure action data is typed correctly
+- Use type inference for loader data
+- Maintain consistent type definitions
