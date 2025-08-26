@@ -9,7 +9,7 @@ Requires [gum](https://github.com/charmbracelet/gum) and [jq](https://jqlang.org
 Simply run the following command in your project root.
   
 ```bash
-curl -sL https://raw.githubusercontent.com/chand1012/cursorrules/refs/heads/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/chand1012/cursorrules/refs/heads/main/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && rm /tmp/install.sh
 ```
 
 ## Rules
