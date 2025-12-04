@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -105,53 +104,7 @@ if gum confirm "Proceed with installation?"; then
 
     gum style --bold --foreground 183 "Installation complete!"
     gum style --foreground 147 "Files have been installed to ./.cursor/rules/"
-
-    # Ask if user wants to convert to OpenHands format
-    if gum confirm "Would you like to convert these rules to OpenHands format?"; then
-        gum style --foreground 147 "Converting rules to OpenHands format..."
-        
-        # Create .openhands/microagents directory if it doesn't exist
-        mkdir -p .openhands/microagents
-
-        # Create repo.md with the header
-        cat > .openhands/microagents/repo.md << 'EOF'
----
-name: repo
-type: repo
-agent: CodeActAgent
----
-
-EOF
-
-        # Process each .mdc file in .cursor/rules
-        for file in .cursor/rules/*.mdc; do
-            if [ -f "$file" ]; then
-                gum style --foreground 178 "Converting: $(basename "$file")"
-                # Remove YAML frontmatter (content between first two '---' lines) and append to repo.md
-                awk '
-                    BEGIN {in_frontmatter=0; first_marker=0}
-                    /^---$/ {
-                        if (first_marker == 0) {
-                            first_marker=1;
-                            in_frontmatter=1;
-                            next;
-                        } else if (in_frontmatter) {
-                            in_frontmatter=0;
-                            next;
-                        }
-                    }
-                    !in_frontmatter {print}
-                ' "$file" >> .openhands/microagents/repo.md
-                
-                # Add a newline between files
-                echo "" >> .openhands/microagents/repo.md
-            fi
-        done
-
-        gum style --bold --foreground 183 "OpenHands conversion complete!"
-        gum style --foreground 147 "Converted rules are available in .openhands/microagents/repo.md"
-    fi
 else
     gum style --foreground 204 "Installation cancelled."
     exit 1
-fi 
+fi
