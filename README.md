@@ -4,12 +4,12 @@ This is my collection of rules for Cursor Agentic Coding. Its a mix of my own ru
 
 ## Installation
 
-Requires [gum](https://github.com/charmbracelet/gum) and [jq](https://jqlang.org/). Will auto install these if you have Homebrew installed.
+Requires [jq](https://jqlang.org/). Will auto install it if you have Homebrew installed.
 
 Simply run the following command in your project root.
   
 ```bash
-curl -sL https://raw.githubusercontent.com/chand1012/cursorrules/refs/heads/main/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && rm /tmp/install.sh
+curl -sL https://raw.githubusercontent.com/chand1012/cursorrules/refs/heads/main/install.sh | bash
 ```
 
 ## Rules
@@ -25,6 +25,7 @@ curl -sL https://raw.githubusercontent.com/chand1012/cursorrules/refs/heads/main
 | [javascript.mdc](languages/javascript.mdc) | Details JavaScript best practices and patterns for modern web development. |
 | [python.mdc](languages/python.mdc) | Specifies Python coding standards with focus on Flask and SQLite integration. |
 | [rust.mdc](languages/rust.mdc) | Contains Rust programming guidelines and best practices. |
+| [docker.mdc](languages/docker.mdc) | Contains Docker and Docker Compose best practices. |
 | [solidity.mdc](languages/solidity.mdc) | Provides Solidity-specific coding standards using Foundry and best practices for Ethereum smart contracts. |
 | [godot.mdc](languages/godot.mdc) | Provides Godot-specific coding standards and best practices for modern Godot game development. |
 | [typescript.mdc](languages/typescript.mdc) | Outlines TypeScript-specific coding standards and type system best practices. |
@@ -42,7 +43,7 @@ curl -sL https://raw.githubusercontent.com/chand1012/cursorrules/refs/heads/main
 
 Some of the rules I needed (mainly Go and Rust) were missing, so I had to make some new ones. My process was:
 
-1. Ask [Grok](https://grok.com/) to do research on best practices for the language or framework.
+1. Ask [Claude](https://claude.ai/) to do research on best practices for the language or framework.
 2. Give it an example of a good rules file and tell it to use the research to make a new rules file.
 3. Copy the rules into a new file.
 
@@ -54,7 +55,7 @@ The rules files should be a clear guideline. While you don't have to include as 
 
 ## The Repo Rules
 
-This is a special rules file (`repo.mdc`) that should be a source of truth for the entire repo. It should contain information about the project, including file structure, any non-standard coding practices, and an explanation of what the project does.
+This is a special rules file (`repo.mdc`) that should be a source of truth for the entire repo, effectively treat is like [`CLAUDE.md`](https://www.humanlayer.dev/blog/writing-a-good-claude-md). It should contain information about the project, including file structure, any non-standard coding practices, and an explanation of what the project does.
 
 Here's an example.
 
