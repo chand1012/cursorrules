@@ -2,17 +2,17 @@
 
 ## 1. Gathering Information
 
-Go to [Grok](https://grok.com/), set the mode to "DeepSearch" and type something similar to the following:
+Go to [Claude](https://claude.ai/) or your preferred LLM and give it the following prompt. I recommend turning on web search to get some up to date results.
 
 ```plaintext
-What are best coding practices when using the Go programming language? I am a developer using VSCode to develop a go application.
+Research and find me some <your language or topic here> best practices. I use VSCode as my development workflow.
 ```
 
 Replace the language with the one you are using. Leave in VSCode as the IDE as Cursor is a fork of VSCode.
 
 ## 2. Writing The Rules
 
-Once Grok is done with the research, switch the mode to "Think" and paste in the following prompt:
+Once the LLM is done with the research, switch the mode to "Think" (or similar) and paste in the following prompt:
 
 ```markdown
 For modern best practices, many people use .mdc files to create coding standards. Here is an example for typescript:
