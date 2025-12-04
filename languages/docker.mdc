@@ -1,0 +1,254 @@
+---
+description: Docker and Docker Compose best practices for containerized application development and deployment
+globs: **/Dockerfile, **/docker-compose*.yml, **/.dockerignore
+---
+
+# Docker Best Practices
+
+## Base Images
+- Use official base images from Docker Hub
+- Use specific version tags, never `latest`
+- Prefer slim or alpine variants for smaller images
+- Choose appropriate base image for your language/framework
+- Update base images regularly for security patches
+
+## Image Optimization
+- Minimize layer count by combining RUN commands
+- Order Dockerfile commands by change frequency (rarely changing first)
+- Use multi-stage builds to reduce final image size
+- Remove package manager caches after installation
+- Delete temporary files and build artifacts
+- Keep images under 500MB when possible
+
+## .dockerignore
+- Exclude `.git` and `.gitignore`
+- Exclude `node_modules/`, `__pycache__/`, `venv/`
+- Exclude `.env`, `.env.local`, and other secrets
+- Exclude build artifacts: `dist/`, `build/`, `*.log`
+- Exclude IDE files: `.vscode/`, `.idea/`, `*.swp`
+- Exclude documentation and test files if not needed
+- Exclude `.dockerignore` itself
+
+## Security
+- Run containers as non-root user
+- Create dedicated user with specific UID/GID
+- Use `USER` instruction to switch user
+- Drop unnecessary capabilities with `cap_drop: ALL`
+- Add only required capabilities with `cap_add`
+- Make filesystem read-only when possible
+- Set `security_opt: no-new-privileges:true`
+- Never store secrets in Dockerfile or environment variables
+- Use build arguments for non-sensitive configuration
+
+## Dockerfile Structure
+- Place frequently changing commands at the end
+- Copy `requirements.txt` or `package.json` before source code
+- Install dependencies before copying application code
+- Use explicit `WORKDIR` instruction
+- Set proper `EXPOSE` ports for documentation
+- Define `ENTRYPOINT` and `CMD` clearly
+- Use `HEALTHCHECK` for production containers
+
+## Multi-Stage Builds
+- Use builder stage for compilation and dependencies
+- Copy only necessary artifacts to final stage
+- Reduce final image size by excluding build tools
+- Use `--from=builder` syntax to copy between stages
+- Name stages descriptively (builder, runtime, etc.)
+
+## Environment Variables
+- Use `ENV` for runtime configuration
+- Use `ARG` for build-time configuration
+- Provide sensible defaults for ENV variables
+- Document all environment variables
+- Never hardcode sensitive information
+- Use `.env` files with Docker Compose, not Dockerfile
+
+## Working Directory
+- Use absolute paths for `WORKDIR`
+- Create application directories explicitly
+- Avoid using root directory as workdir
+- Ensure proper permissions on working directory
+
+## Caching Strategy
+- Leverage Docker layer caching effectively
+- Place stable dependencies before frequently changing code
+- Combine related commands to reduce layers
+- Use `.dockerignore` to avoid cache invalidation
+
+---
+
+# Docker Compose Best Practices
+
+## Version and Structure
+- Pin `version` to specific version (use 3.9+)
+- Pin all service image versions with specific tags
+- Use meaningful service names (lowercase, descriptive)
+- Organize services logically in the file
+- Group related configuration together
+
+## Service Configuration
+- Define `container_name` for easy reference
+- Set explicit `image` names and tags
+- Use `build` for local Dockerfile builds
+- Set `restart_policy` with appropriate conditions
+- Configure `logging` driver and options
+- Use `depends_on` with health checks for reliability
+
+## Environment Management
+- Use `env_file` to load environment variables
+- Separate environment files per deployment stage
+- Use `environment` section for overrides
+- Never commit `.env` files to version control
+- Document all required environment variables
+- Use `.env.example` to show required variables
+
+## Volumes and Storage
+- Use named volumes for persistent data
+- Specify volume driver explicitly
+- Use proper mount paths for each service
+- Avoid anonymous volumes
+- Set appropriate volume permissions
+- Use `bind` mounts only for development
+- Back up named volumes regularly
+
+## Networking
+- Define explicit networks for service communication
+- Use `networks` to control service visibility
+- Use `expose` for inter-service communication only
+- Use `ports` only for external access
+- Bind to `127.0.0.1` for localhost-only services
+- Use bridge network for most cases
+- Document port mappings clearly
+
+## Dependencies and Health Checks
+- Use `depends_on` with `condition: service_healthy`
+- Implement `healthcheck` for all critical services
+- Set appropriate health check intervals and timeouts
+- Configure retry logic in health checks
+- Add startup delays for services needing initialization
+- Use proper health check commands for each service type
+
+## Resource Management
+- Set `deploy.resources.limits` for CPU and memory
+- Set `deploy.resources.reservations` for minimum resources
+- Configure OOM behavior appropriately
+- Monitor resource usage in production
+- Scale services horizontally when needed
+
+## Logging Configuration
+- Use `logging.driver: json-file` for production
+- Set `max-size` and `max-file` for log rotation
+- Use structured logging formats
+- Centralize logs for easier debugging
+- Configure appropriate log levels
+- Avoid logging sensitive information
+
+## Environment-Specific Configuration
+- Create separate compose files: `docker-compose.yml`, `docker-compose.prod.yml`, `docker-compose.dev.yml`
+- Use `-f` flag to combine multiple compose files
+- Override base configuration in environment-specific files
+- Use profiles for optional services
+- Document how to run different environments
+
+## Profiles
+- Use `profiles` for optional or environment-specific services
+- Create `debug` profile for debugging tools
+- Create `monitoring` profile for observability tools
+- Document available profiles
+- Use `--profile` flag to activate profiles
+
+## Security
+- Don't run services as root
+- Use `user` instruction to specify UID/GID
+- Set `read_only: true` for read-only filesystems
+- Use `cap_drop` and `cap_add` appropriately
+- Implement network isolation
+- Use secrets management for sensitive data
+- Implement proper CORS and security headers
+
+## Database Services
+- Use official database images
+- Mount volumes for data persistence
+- Implement proper health checks
+- Set appropriate resource limits
+- Configure proper backups
+- Use environment variables for credentials
+- Don't expose database ports unnecessarily
+
+## Caching Services
+- Use official Redis or Memcached images
+- Implement persistence where needed
+- Set appropriate memory limits
+- Configure eviction policies
+- Implement health checks
+- Don't expose cache ports unnecessarily
+
+## Web Services
+- Expose only necessary ports
+- Use proper health checks
+- Implement proper resource limits
+- Configure proper restart policies
+- Set environment variables appropriately
+- Mount volumes for logs if needed
+
+## Development vs Production
+- Use lighter images for development
+- Include debugging tools only in development
+- Use volume mounts for hot-reloading in development
+- Disable hot-reloading in production
+- Use different logging levels
+- Configure different resource limits
+- Use different restart policies
+
+## Documentation
+- Document all services and their purpose
+- Document required environment variables
+- Document port mappings
+- Document volume mounts and their purpose
+- Include setup instructions in README
+- Document how to run different profiles
+- Include troubleshooting guide
+
+## Testing
+- Use separate compose file for testing
+- Include test database configuration
+- Configure proper health checks for test services
+- Use isolated networks for tests
+- Clean up resources after tests
+- Use appropriate timeouts
+
+## Performance
+- Use appropriate image sizes
+- Configure resource limits properly
+- Use caching where appropriate
+- Implement proper logging levels
+- Monitor container metrics
+- Optimize startup times
+
+## Maintenance
+- Regularly update base images
+- Pin specific versions to control updates
+- Use semantic versioning
+- Document upgrade procedures
+- Test updates in development first
+- Monitor security advisories
+
+---
+
+# Security Checklist
+- [ ] Use specific image versions, not `latest`
+- [ ] Run containers as non-root user
+- [ ] Set resource limits on all services
+- [ ] Use named volumes for persistence
+- [ ] Implement health checks for critical services
+- [ ] Configure restart policies appropriately
+- [ ] Use environment files for secrets
+- [ ] Implement proper logging
+- [ ] Use network isolation
+- [ ] Set read-only filesystems where possible
+- [ ] Drop unnecessary capabilities
+- [ ] Use `.dockerignore` effectively
+- [ ] Scan images for vulnerabilities
+- [ ] Keep base images updated
+- [ ] Document all configuration
