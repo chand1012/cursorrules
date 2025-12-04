@@ -8,15 +8,7 @@ NC='\033[0m' # No Color
 check_command() {
     if ! command -v "$1" &> /dev/null; then
         echo -e "\033[0;31mError: $1 is not installed\033[0m"
-        if [ "$1" = "gum" ]; then
-            if command -v brew &> /dev/null; then
-                echo -e "\033[0;33mInstalling gum using Homebrew...\033[0m"
-                brew install gum
-            else
-                echo -e "\033[0;31mPlease install gum first: https://smolurl.cc/tPJ0JQ\033[0m"
-                exit 1
-            fi
-        elif [ "$1" = "jq" ]; then
+        if [ "$1" = "jq" ]; then
             if command -v brew &> /dev/null; then
                 echo -e "\033[0;33mInstalling jq using Homebrew...\033[0m"
                 brew install jq
@@ -32,79 +24,32 @@ check_command() {
 }
 
 # Check for required commands
-check_command "gum"
 check_command "curl"
 check_command "jq"
 
 # GitHub API base URL
 GITHUB_API="https://api.github.com/repos/chand1012/cursorrules/contents"
 
-# Function to fetch and format options from GitHub
-fetch_options() {
+# Function to fetch and download files from a directory
+download_from_path() {
     local path=$1
-    curl -s "$GITHUB_API/$path" | jq -r '.[].name'
+    local files=$(curl -s "$GITHUB_API/$path" | jq -r '.[].name')
+    
+    for file in $files; do
+        echo -e "\033[0;183mDownloading: $file\033[0m"
+        curl -s "https://raw.githubusercontent.com/chand1012/cursorrules/main/$path/$file" > ".cursor/rules/$file"
+    done
 }
 
-gum style --foreground 147 "Fetching available options..."
-FRAMEWORKS=($(fetch_options "frameworks"))
-LANGUAGES=($(fetch_options "languages"))
-PRACTICES=($(fetch_options "practice"))
+echo -e "\033[0;147mFetching and installing all rules...\033[0m"
 
-# Create selection menus
-gum style \
-    --border double \
-    --border-foreground 219 \
-    --padding 1 \
-    --margin 1 \
-    --bold \
-    --foreground 219 \
-    "╭──────────────────────────────────────╮" \
-    "│         LLM Rules Installer          │" \
-    "╰──────────────────────────────────────╯"
+# Create necessary directories
+mkdir -p .cursor/rules/
 
-gum style --foreground 147 "Please select the options you want to install:"
+# Download all items
+download_from_path "frameworks"
+download_from_path "languages"
+download_from_path "practice"
 
-# Language selection
-gum style --bold --foreground 183 "Select Languages:"
-LANGUAGE_CHOICES=$(gum choose --no-limit "${LANGUAGES[@]}")
-
-# Framework selection
-gum style --bold --foreground 183 "Select Frameworks:"
-FRAMEWORK_CHOICES=$(gum choose --no-limit "${FRAMEWORKS[@]}")
-
-# Practice selection
-gum style --bold --foreground 183 "Select Practices:"
-PRACTICE_CHOICES=$(gum choose --no-limit "${PRACTICES[@]}")
-
-# Confirm installation
-gum style --bold --foreground 219 "Selected Options:"
-echo -n "Frameworks: " && gum style --foreground 178 "${FRAMEWORK_CHOICES[*]}"
-echo -n "Languages: " && gum style --foreground 178 "${LANGUAGE_CHOICES[*]}"
-echo -n "Practices: " && gum style --foreground 178 "${PRACTICE_CHOICES[*]}"
-
-if gum confirm "Proceed with installation?"; then
-    # Create necessary directories
-    mkdir -p .cursor/rules/
-
-    # Download selected items
-    for framework in $FRAMEWORK_CHOICES; do
-        gum style --foreground 183 "Downloading framework: $framework"
-        curl -s "https://raw.githubusercontent.com/chand1012/cursorrules/main/frameworks/$framework" > .cursor/rules/$framework
-    done
-
-    for language in $LANGUAGE_CHOICES; do
-        gum style --foreground 183 "Downloading language: $language"
-        curl -s "https://raw.githubusercontent.com/chand1012/cursorrules/main/languages/$language" > .cursor/rules/$language
-    done
-
-    for practice in $PRACTICE_CHOICES; do
-        gum style --foreground 183 "Downloading practice: $practice"
-        curl -s "https://raw.githubusercontent.com/chand1012/cursorrules/main/practice/$practice" > .cursor/rules/$practice
-    done
-
-    gum style --bold --foreground 183 "Installation complete!"
-    gum style --foreground 147 "Files have been installed to ./.cursor/rules/"
-else
-    gum style --foreground 204 "Installation cancelled."
-    exit 1
-fi
+echo -e "\033[1;0;183mInstallation complete!\033[0m"
+echo -e "\033[0;147mAll rules have been installed to ./.cursor/rules/\033[0m"
